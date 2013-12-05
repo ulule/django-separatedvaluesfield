@@ -17,7 +17,7 @@ setup(
     long_description=README,
     author='Florent Messa',
     author_email='florent.messa@gmail.com',
-    url='http://github.com/ulule/django-separatedvaluesfield',
+    url='http://github.com/thoas/django-separatedvaluesfield',
     packages=find_packages(),
     zip_safe=False,
     include_package_data=True,

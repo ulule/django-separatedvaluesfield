@@ -70,5 +70,5 @@ Usage
     ['fr', 'en']
 
 
-.. _GitHub: https://github.com/ulule/django-separatedvaluesfield
+.. _GitHub: https://github.com/thoas/django-separatedvaluesfield
 .. _MultipleChoiceField: https://docs.djangoproject.com/en/dev/ref/forms/fields/#multiplechoicefield
