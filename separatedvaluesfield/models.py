@@ -87,6 +87,6 @@ class SeparatedValuesField(models.CharField):
 
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^courriers\.fields\.SeparatedValuesField"])
+    add_introspection_rules([], ["^separatedvaluesfield\.models\.SeparatedValuesField"])
 except ImportError:
     pass
