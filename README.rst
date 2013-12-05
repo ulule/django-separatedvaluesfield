@@ -43,9 +43,11 @@ Installation
 3. Sync your database using ``syncdb`` command from django command line
 
 
-The ``SeparatedValuesField`` behaves like a ``CharField`` which separates values
-a special token (default is ``,``), it renders a MultipleChoiceField_ when
-you are creating a ``forms.ModelForm`` with your model.
+The ``SeparatedValuesField`` behaves like a ``CharField`` which separates values with
+a token (default is ``,``).
+
+This field is transformed as a MultipleChoiceField_ when you are
+creating a ``forms.ModelForm`` with your model.
 
 
 Usage
