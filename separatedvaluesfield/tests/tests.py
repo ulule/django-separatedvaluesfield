@@ -1,7 +1,7 @@
 from django import forms
 from django.test import TestCase
 
-from .models import Project
+from .models import Project, RequiredProject
 
 
 class SeparatedValuesFieldTests(TestCase):
@@ -34,3 +34,27 @@ class SeparatedValuesFieldTests(TestCase):
         instance = form.save()
 
         self.assertEqual(instance.languages, langs)
+
+    def test_errors(self):
+        class ProjectForm(forms.ModelForm):
+            class Meta:
+                model = Project
+
+        class RequiredProjectForm(forms.ModelForm):
+            class Meta:
+                model = RequiredProject
+
+        form = ProjectForm(data={
+            'name': 'Weekly',
+            'languages': [u'fake']
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertIn('languages', form.errors)
+
+        required_form = RequiredProjectForm(data={
+            'name': 'Weekly',
+        })
+
+        self.assertFalse(required_form.is_valid())
+        self.assertIn('languages', required_form.errors)
