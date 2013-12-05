@@ -1,9 +1,9 @@
 django-separatedvaluesfield
 ===========================
 
-.. image:: https://secure.travis-ci.org/ulule/django-separatedvaluesfield.png?branch=master
+.. image:: https://secure.travis-ci.org/thoas/django-separatedvaluesfield.png?branch=master
     :alt: Build Status
-    :target: http://travis-ci.org/ulule/django-separatedvaluesfield
+    :target: http://travis-ci.org/thoas/django-separatedvaluesfield
 
 Custom field for Django to separate multiple values in database
 with a separator and retrieve them as list.
