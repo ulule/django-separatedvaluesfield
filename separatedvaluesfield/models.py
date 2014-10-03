@@ -50,7 +50,7 @@ class SeparatedValuesField(models.CharField):
 
     def get_db_prep_value(self, value, **kwargs):
         if not value:
-            return
+            return ''
 
         assert(isinstance(value, list) or isinstance(value, tuple))
 
