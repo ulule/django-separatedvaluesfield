@@ -1,3 +1,4 @@
+import six
 from django.forms.fields import MultipleChoiceField
 from django.core import validators
 from django.db import models
@@ -54,7 +55,12 @@ class SeparatedValuesField(models.CharField):
 
         assert(isinstance(value, list) or isinstance(value, tuple))
 
-        return self.token.join([unicode(s) for s in value])
+        if six.PY2:
+            prep_value = self.token.join([unicode(s) for s in value])
+        elif six.PY3:
+            prep_value = self.token.join([s for s in value])
+
+        return prep_value
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
