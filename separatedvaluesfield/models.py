@@ -58,7 +58,7 @@ class SeparatedValuesField(models.CharField):
         if six.PY2:
             prep_value = self.token.join([unicode(s) for s in value])
         elif six.PY3:
-            prep_value = self.token.join([s for s in value])
+            prep_value = self.token.join([str(s) for s in value])
 
         return prep_value
 
