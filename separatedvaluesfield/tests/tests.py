@@ -19,6 +19,7 @@ class SeparatedValuesFieldTests(TestCase):
         class ProjectForm(forms.ModelForm):
             class Meta:
                 model = Project
+                exclude = ()
 
         form = ProjectForm()
         self.assertFalse(form.fields['languages'].required)
@@ -39,10 +40,12 @@ class SeparatedValuesFieldTests(TestCase):
         class ProjectForm(forms.ModelForm):
             class Meta:
                 model = Project
+                exclude = ()
 
         class RequiredProjectForm(forms.ModelForm):
             class Meta:
                 model = RequiredProject
+                exclude = ()
 
         form = ProjectForm(data={
             'name': 'Weekly',
