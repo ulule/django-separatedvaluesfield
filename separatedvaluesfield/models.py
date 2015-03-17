@@ -1,12 +1,13 @@
+import six
 from django.forms.fields import MultipleChoiceField
 from django.core import validators
 from django.db import models
 from django.core import exceptions
 from django.utils.text import capfirst
+from django.utils.six import with_metaclass
 
 
-class SeparatedValuesField(models.CharField):
-    __metaclass__ = models.SubfieldBase
+class SeparatedValuesField(with_metaclass(models.SubfieldBase, models.Field)):
 
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop('token', ',')
@@ -30,7 +31,7 @@ class SeparatedValuesField(models.CharField):
                     choices.append(option_key)
 
             for val in value:
-                if val and not val in choices:
+                if val and val not in choices:
                     raise exceptions.ValidationError(self.error_messages['invalid_choice'] % val)
 
         if value is None and not self.null:
@@ -48,17 +49,26 @@ class SeparatedValuesField(models.CharField):
 
         return value.split(self.token)
 
+    def get_prep_value(self, value):
+        if value is None:
+            return None
+        return value.split(self.token)
+
     def get_db_prep_value(self, value, **kwargs):
         if not value:
             return ''
 
         assert(isinstance(value, list) or isinstance(value, tuple))
 
-        return self.token.join([unicode(s) for s in value])
+        if six.PY2:
+            prep_value = self.token.join([unicode(s) for s in value])
+        elif six.PY3:
+            prep_value = self.token.join([str(s) for s in value])
+
+        return prep_value
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
-
         return self.get_db_prep_value(value)
 
     def formfield(self, form_class=MultipleChoiceField, **kwargs):
