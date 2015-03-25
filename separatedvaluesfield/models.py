@@ -34,6 +34,10 @@ class SeparatedValuesField(models.CharField):
                 else:
                     choices.append(option_key)
 
+            # If we have integers, convert them first to be sure we only compare
+            # right types
+            choices = ['%s' % choice for choice in choices]
+
             for val in value:
                 if val and not val in choices:
                     raise exceptions.ValidationError(self.error_messages['invalid_choice'] % val)
