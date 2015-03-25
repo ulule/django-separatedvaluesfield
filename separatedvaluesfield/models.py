@@ -5,6 +5,7 @@ from django.core import validators
 from django.core import exceptions
 from django.db import models
 from django.forms.fields import MultipleChoiceField
+from django.utils import six
 from django.utils.text import capfirst
 
 
@@ -13,6 +14,7 @@ class SeparatedValuesField(models.CharField):
 
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop('token', ',')
+        self.cast = kwargs.pop('cast', six.text_type)
         super(SeparatedValuesField, self).__init__(*args, **kwargs)
 
     def validate(self, value, model_instance):
@@ -32,10 +34,6 @@ class SeparatedValuesField(models.CharField):
                 else:
                     choices.append(option_key)
 
-            # If we have integers, convert them first to be sure we only compare
-            # right types
-            choices = ['%s' % choice for choice in choices]
-
             for val in value:
                 if val and not val in choices:
                     raise exceptions.ValidationError(self.error_messages['invalid_choice'] % val)
@@ -48,10 +46,10 @@ class SeparatedValuesField(models.CharField):
 
     def to_python(self, value):
         if not value:
-            return
+            return None
 
         if isinstance(value, list):
-            return value
+            return [self.cast(v) for v in value]
 
         return value.split(self.token)
 
@@ -65,7 +63,6 @@ class SeparatedValuesField(models.CharField):
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
-
         return self.get_db_prep_value(value)
 
     def formfield(self, form_class=MultipleChoiceField, **kwargs):

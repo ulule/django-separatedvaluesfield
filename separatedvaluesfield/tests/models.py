@@ -18,5 +18,9 @@ class RequiredProject(models.Model):
 
 class ProjectIntegerChoices(models.Model):
     name = models.CharField(max_length=150)
-    languages = SeparatedValuesField(max_length=150, choices=((1, 'English'),
-                                                              (2, 'French')))
+    languages = SeparatedValuesField(
+        max_length=150,
+        cast=int,
+        choices=(
+            (1, 'English'),
+            (2, 'French')))

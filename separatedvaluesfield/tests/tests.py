@@ -69,35 +69,15 @@ class SeparatedValuesFieldTests(TestCase):
     def test_integer_choices_model(self):
         project = ProjectIntegerChoices(name='project')
         self.assertEqual(project.languages, None)
+
+        langs = [u'1', u'2']
+        project.languages = langs
+        project.save()
+
+        self.assertEqual(project.languages, [1, 2])
+
         langs = [1, 2]
         project.languages = langs
         project.save()
-        self.assertEqual(project.languages, langs)
 
-    def test_integer_choices_validation(self):
-        class ProjectIntegerChoicesForm(forms.ModelForm):
-            class Meta:
-                model = ProjectIntegerChoices
-                exclude = ()
-
-        form = ProjectIntegerChoicesForm(data={
-            'name': 'IntegerChoices',
-            'languages': [u'1', u'2']
-        })
-
-        self.assertTrue(form.is_valid())
-
-        form = ProjectIntegerChoicesForm(data={
-            'name': 'IntegerChoices',
-            'languages': [1, 2]
-        })
-
-        self.assertTrue(form.is_valid())
-
-        form = ProjectIntegerChoicesForm(data={
-            'name': 'IntegerChoices',
-            'languages': [u'6', u'8']
-        })
-
-        self.assertFalse(form.is_valid())
-        self.assertIn('languages', form.errors)
+        self.assertEqual(project.languages, [1, 2])

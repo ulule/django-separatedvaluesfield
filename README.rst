@@ -30,11 +30,34 @@ Add ``SeparatedValuesField`` to your Django model:
 
     from separatedvaluesfield.models import SeparatedValuesField
 
+    class Project(models.Model):
+        name = models.CharField(max_length=150)
+        languages = SeparatedValuesField(
+            max_length=150,
+            token=',',
+            choices=(
+                ('en', 'English'),
+                ('fr', 'French')))
+
+If your choices values are not strings, add the ``cast`` option with the type
+you want to apply on values (defaults to ``django.utils.six.text_type``):
+
+.. code:: python
+
+    # models.py
+    from django.db import models
+
+    from separatedvaluesfield.models import SeparatedValuesField
 
     class Project(models.Model):
         name = models.CharField(max_length=150)
-        languages = SeparatedValuesField(max_length=150, choices=(('en', 'English'),
-                                                                  ('fr', 'French')), token=',')
+        languages = SeparatedValuesField(
+            max_length=150,
+            cast=int,
+            token=',',
+            choices=(
+                (1, 'English'),
+                (2, 'French')))
 
 If you are running Django <= 1.6, synchronize your database using ``syncdb``::
 
@@ -65,7 +88,8 @@ Usage
     >>> project.languages
     ['fr', 'en']
 
-    >>> project = Project(name='Project with integers', languages=[1, 2])
+    # If you added "cast" option to the field to cast to 'int'
+    >>> project = Project(name='Project with integers', languages=[u'1', u'2'])
     >>> project.save() # save '1,2' in database for the column "languages"
     >>> project = Project.objects.get(pk=1)
     >>> project.languages
