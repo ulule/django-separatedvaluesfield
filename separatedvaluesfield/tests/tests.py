@@ -70,7 +70,6 @@ class SeparatedValuesFieldTests(TestCase):
         project = ProjectIntegerChoices(name='project')
         self.assertEqual(project.languages, None)
         langs = [1, 2]
-        import pdb; pdb.set_trace()
         project.languages = langs
         project.save()
         self.assertEqual(project.languages, langs)
