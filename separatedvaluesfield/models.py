@@ -36,7 +36,7 @@ class SeparatedValuesField(models.CharField):
 
             # If we have integers, convert them first to be sure we only compare
             # right types
-            choices = ['%s' % choice for choice in choices]
+            choices = [self.cast(choice) for choice in choices]
 
             for val in value:
                 if val and not val in choices:

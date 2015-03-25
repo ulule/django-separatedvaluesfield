@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from .models import (Project,
                      RequiredProject,
-                     ProjectIntegerChoices)
+                     ProjectCast)
 
 
 class SeparatedValuesFieldTests(TestCase):
@@ -66,8 +66,8 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertFalse(required_form.is_valid())
         self.assertIn('languages', required_form.errors)
 
-    def test_integer_choices_model(self):
-        project = ProjectIntegerChoices(name='project')
+    def test_cast_model(self):
+        project = ProjectCast(name='project')
         self.assertEqual(project.languages, None)
 
         langs = [u'1', u'2']
@@ -81,3 +81,23 @@ class SeparatedValuesFieldTests(TestCase):
         project.save()
 
         self.assertEqual(project.languages, [1, 2])
+
+    def test_cast_validation(self):
+        class ProjectCastForm(forms.ModelForm):
+            class Meta:
+                model = ProjectCast
+                exclude = ()
+
+        form = ProjectCastForm(data={
+            'name': 'Weekly',
+            'languages': [u'1', u'2'],
+        })
+
+        self.assertTrue(form.is_valid())
+
+        form = ProjectCastForm(data={
+            'name': 'Weekly',
+            'languages': [1, 2],
+        })
+
+        self.assertTrue(form.is_valid())
