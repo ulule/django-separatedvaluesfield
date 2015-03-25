@@ -7,3 +7,10 @@ test:
 
 release:
 	python setup.py sdist register upload -s
+
+.venv:
+	virtualenv -p python2.7 `pwd`/.venv
+	. .venv/bin/activate && pip install -r requirements.dev.pip
+
+dev: .venv
+	. .venv/bin/activate
