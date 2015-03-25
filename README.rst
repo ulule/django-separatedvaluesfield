@@ -5,8 +5,83 @@ django-separatedvaluesfield
     :alt: Build Status
     :target: http://travis-ci.org/thoas/django-separatedvaluesfield
 
-Custom field for Django to separate multiple values in database
-with a separator and retrieve them as list.
+Alternative to CommaSeparatedIntegerField_ built-in field that supports
+MultipleChoiceField_, custom separator and returns values as list.
+
+Installation
+------------
+
+Install package from PyPi_::
+
+    pip install django-separatedvaluesfield
+
+Or download the archive from GitHub_ and proceed to a manual installation::
+
+    curl -L https://github.com/thoas/django-separatedvaluesfield/tarball/master | tar zx
+    cd thoas-django-separatedvaluesfield
+    python setup.py install
+
+Add ``SeparatedValuesField`` to your Django model:
+
+.. code:: python
+
+    # models.py
+    from django.db import models
+
+    from separatedvaluesfield.models import SeparatedValuesField
+
+
+    class Project(models.Model):
+        name = models.CharField(max_length=150)
+        languages = SeparatedValuesField(max_length=150, choices=(('en', 'English'),
+                                                                  ('fr', 'French')), token=',')
+
+If you are running Django <= 1.6, synchronize your database using ``syncdb``::
+
+    python manage.py syncdb
+
+If you are running Django >= 1.7, synchronize your database using ``migrate``::
+
+    python manage.py migrate
+
+The ``SeparatedValuesField`` behaves like a ``CharField`` which separates values with
+a token (default is ``,``).
+
+This field is transformed as a MultipleChoiceField_ when you are
+creating a ``forms.ModelForm`` with your model.
+
+Usage
+-----
+
+.. code:: pycon
+
+    >>> from myapp.models import Project
+    >>> project = Project(name='Project with strings', languages=['fr', 'en'])
+    >>> project.save() # save 'fr,en' in database for the column "languages"
+    >>> project.pk
+    1
+
+    >>> project = Project.objects.get(pk=1)
+    >>> project.languages
+    ['fr', 'en']
+
+    >>> project = Project(name='Project with integers', languages=[1, 2])
+    >>> project.save() # save '1,2' in database for the column "languages"
+    >>> project = Project.objects.get(pk=1)
+    >>> project.languages
+    [1, 2]
+
+Contribute
+----------
+
+1. Fork the repository
+2. Clone your fork
+3. Create a dedicated branch (never ever work in ``master``)
+4. Create your development environment with ``make dev``
+5. Activate your environment with ``source .venv/bin/activate``
+6. Make modifications
+7. Write tests and execute them with ``make test``
+8. If all tests pass, submit a pull request
 
 Compatibility
 -------------
@@ -25,53 +100,7 @@ This library is compatible with:
 - python3.4, django1.6
 - python3.4, django1.7
 
-Installation
-------------
-
-1. Download the package on GitHub_ or simply install it via PyPi
-2. Add ``SeparatedValuesField`` to your Django model ::
-
-    # models.py
-    from django.db import models
-
-    from separatedvaluesfield.models import SeparatedValuesField
-
-
-    class Project(models.Model):
-        name = models.CharField(max_length=150)
-        languages = SeparatedValuesField(max_length=150, choices=(('en', 'English'),
-                                                                  ('fr', 'French')), token=',')
-
-
-3. Sync your database using ``syncdb`` command from django command line
-
-
-The ``SeparatedValuesField`` behaves like a ``CharField`` which separates values with
-a token (default is ``,``).
-
-This field is transformed as a MultipleChoiceField_ when you are
-creating a ``forms.ModelForm`` with your model.
-
-
-Usage
------
-
-::
-
-    In [1]: from myapp.models import Project
-
-    In [2]: project = Project(name='Foo', languages=['fr', 'en'])
-
-    In [3]: project.save() # save 'fr,en' in database for the column "languages"
-
-    In [4]: project.pk
-    1
-
-    In [5]: project = Project.objects.get(pk=1)
-
-    In [6]: project.languages
-    ['fr', 'en']
-
-
+.. _CommaSeparatedIntegerField: https://docs.djangoproject.com/en/dev/ref/models/fields/#commaseparatedintegerfield
+.. _PyPi: https://pypi.python.org/
 .. _GitHub: https://github.com/thoas/django-separatedvaluesfield
 .. _MultipleChoiceField: https://docs.djangoproject.com/en/dev/ref/forms/fields/#multiplechoicefield
