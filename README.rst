@@ -81,7 +81,8 @@ Contribute
 5. Activate your environment with ``source .venv/bin/activate``
 6. Make modifications
 7. Write tests and execute them with ``make test``
-8. If all tests pass, submit a pull request
+8. Be sure all test pass with ``tox``
+9. If all tests pass, submit a pull request
 
 Compatibility
 -------------
