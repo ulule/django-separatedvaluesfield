@@ -1,7 +1,10 @@
-from django.forms.fields import MultipleChoiceField
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.core import validators
-from django.db import models
 from django.core import exceptions
+from django.db import models
+from django.forms.fields import MultipleChoiceField
 from django.utils.text import capfirst
 
 
@@ -31,7 +34,7 @@ class SeparatedValuesField(models.CharField):
 
             # If we have integers, convert them first to be sure we only compare
             # right types
-            choices = [unicode(choice) for choice in choices]
+            choices = ['%s' % choice for choice in choices]
 
             for val in value:
                 if val and not val in choices:
@@ -58,7 +61,7 @@ class SeparatedValuesField(models.CharField):
 
         assert(isinstance(value, list) or isinstance(value, tuple))
 
-        return self.token.join([unicode(s) for s in value])
+        return self.token.join(['%s' % s for s in value])
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
