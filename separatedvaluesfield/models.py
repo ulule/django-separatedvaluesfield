@@ -7,11 +7,10 @@ from django.db import models
 from django.forms.fields import MultipleChoiceField
 from django.utils import six
 from django.utils.text import capfirst
+from django.utils.six import with_metaclass
 
 
-class SeparatedValuesField(models.CharField):
-    __metaclass__ = models.SubfieldBase
-
+class SeparatedValuesField(with_metaclass(models.SubfieldBase, models.CharField)):
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop('token', ',')
         self.cast = kwargs.pop('cast', six.text_type)
@@ -39,7 +38,7 @@ class SeparatedValuesField(models.CharField):
             choices = [self.cast(choice) for choice in choices]
 
             for val in value:
-                if val and not val in choices:
+                if val and val not in choices:
                     raise exceptions.ValidationError(self.error_messages['invalid_choice'] % val)
 
         if value is None and not self.null:
