@@ -16,7 +16,7 @@ class RequiredProject(models.Model):
                                                               ('fr', 'French')))
 
 
-class ProjectCast(models.Model):
+class ProjectCastInt(models.Model):
     name = models.CharField(max_length=150)
     languages = SeparatedValuesField(
         max_length=150,
@@ -24,3 +24,11 @@ class ProjectCast(models.Model):
         choices=(
             (1, 'English'),
             (2, 'French')))
+
+class ProjectCastString(models.Model):
+    name = models.CharField(max_length=150)
+    languages = SeparatedValuesField(
+        max_length=150,
+        choices=(
+            ('1', 'English'),
+            ('2', 'French')))

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django import forms
 from django.test import TestCase
 
 from .models import (Project,
                      RequiredProject,
-                     ProjectCast)
+                     ProjectCastInt,
+                     ProjectCastString)
 
 
 class SeparatedValuesFieldTests(TestCase):
@@ -28,11 +31,11 @@ class SeparatedValuesFieldTests(TestCase):
         form = ProjectForm()
         self.assertFalse(form.fields['languages'].required)
 
-        valid_data = {'name': 'Weekly', 'languages': [u'']}
+        valid_data = {'name': 'Weekly', 'languages': ['']}
         form = ProjectForm(data=valid_data)
         self.assertTrue(form.is_valid())
 
-        valid_data = {'name': 'Daily', 'languages': [u'en', u'fr']}
+        valid_data = {'name': 'Daily', 'languages': ['en', 'fr']}
         form = ProjectForm(data=valid_data)
         self.assertTrue(form.is_valid())
 
@@ -53,7 +56,7 @@ class SeparatedValuesFieldTests(TestCase):
 
         form = ProjectForm(data={
             'name': 'Weekly',
-            'languages': [u'fake']
+            'languages': ['fake']
         })
 
         self.assertFalse(form.is_valid())
@@ -67,37 +70,135 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertIn('languages', required_form.errors)
 
     def test_cast_model(self):
-        project = ProjectCast(name='project')
+
+        #
+        # A single tring
+        #
+
+        project = ProjectCastInt(name='project')
         self.assertEqual(project.languages, None)
 
-        langs = [u'1', u'2']
+        langs = "1,2"
         project.languages = langs
         project.save()
-
         self.assertEqual(project.languages, [1, 2])
 
-        langs = [1, 2]
+        # Now let's fetch it again
+        project = ProjectCastInt.objects.first()
+        self.assertEqual(project.languages, [1, 2])
+
+        project.delete()
+
+        project = ProjectCastString(name='project')
+        self.assertEqual(project.languages, None)
+
+        langs = "1,2"
         project.languages = langs
         project.save()
+        self.assertEqual(project.languages, ['1', '2'])
 
+        # Now let's fetch it again
+        project = ProjectCastString.objects.first()
+        self.assertEqual(project.languages, ['1', '2'])
+
+        project.delete()
+
+        #
+        # List of Integers
+        #
+
+        project = ProjectCastInt(name='project')
+        self.assertEqual(project.languages, None)
+
+        project.languages = ['1', '2']
+        project.save()
         self.assertEqual(project.languages, [1, 2])
+
+        # Now let's fetch it again
+        project = ProjectCastInt.objects.first()
+        self.assertEqual(project.languages, [1, 2])
+
+        project.delete()
+
+        project = ProjectCastInt(name='project')
+        self.assertEqual(project.languages, None)
+        project.languages = [1, 2]
+        project.save()
+        self.assertEqual(project.languages, [1, 2])
+
+        # Now let's fetch it again
+        project = ProjectCastInt.objects.first()
+        self.assertEqual(project.languages, [1, 2])
+
+        project.delete()
+
+        # List of strings
+
+        project = ProjectCastString(name='project')
+        self.assertEqual(project.languages, None)
+
+        project.languages = ['1', '2']
+        project.save()
+        self.assertEqual(project.languages, ['1', '2'])
+
+        # Now let's fetch it again
+        project = ProjectCastString.objects.first()
+        self.assertEqual(project.languages, ['1', '2'])
+
+        project.delete()
+
+        project = ProjectCastString(name='project')
+        self.assertEqual(project.languages, None)
+        project.languages = [1, 2]
+        project.save()
+        self.assertEqual(project.languages, ['1', '2'])
+
+        # Now let's fetch it again
+        project = ProjectCastString.objects.first()
+        self.assertEqual(project.languages, ['1', '2'])
+
+        project.delete()
 
     def test_cast_validation(self):
-        class ProjectCastForm(forms.ModelForm):
+
+        # Integers
+
+        class ProjectCastIntForm(forms.ModelForm):
             class Meta:
-                model = ProjectCast
+                model = ProjectCastInt
                 exclude = ()
 
-        form = ProjectCastForm(data={
+        form = ProjectCastIntForm(data={
             'name': 'Weekly',
             'languages': [u'1', u'2'],
         })
 
         self.assertTrue(form.is_valid())
 
-        form = ProjectCastForm(data={
+        form = ProjectCastIntForm(data={
             'name': 'Weekly',
             'languages': [1, 2],
+        })
+
+        self.assertTrue(form.is_valid())
+
+        # Strings
+
+        class ProjectCastStringForm(forms.ModelForm):
+            class Meta:
+                model = ProjectCastString
+                exclude = ()
+
+        form = ProjectCastStringForm(data={
+            'name': 'Weekly',
+            'languages': [u'1', u'2'],
+        })
+
+        self.assertTrue(form.is_valid())
+
+        form = ProjectCastStringForm(data={
+            'name': 'Weekly',
+            'languages': ['1', '2'],
         })
 
         self.assertTrue(form.is_valid())

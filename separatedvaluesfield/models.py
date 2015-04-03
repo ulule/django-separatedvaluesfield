@@ -51,10 +51,11 @@ class SeparatedValuesField(with_metaclass(models.SubfieldBase, models.CharField)
         if not value:
             return None
 
-        if isinstance(value, list):
-            return [self.cast(v) for v in value]
+        values = value
+        if isinstance(value, six.string_types):
+            values = value.split(self.token)
 
-        return value.split(self.token)
+        return [self.cast(v) for v in values]
 
     def get_db_prep_value(self, value, **kwargs):
         if not value:
