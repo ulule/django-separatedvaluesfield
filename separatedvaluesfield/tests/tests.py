@@ -84,7 +84,7 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertEqual(project.languages, [1, 2])
 
         # Now let's fetch it again
-        project = ProjectCastInt.objects.first()
+        project = ProjectCastInt.objects.all()[0]
         self.assertEqual(project.languages, [1, 2])
 
         project.delete()
@@ -98,7 +98,7 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertEqual(project.languages, ['1', '2'])
 
         # Now let's fetch it again
-        project = ProjectCastString.objects.first()
+        project = ProjectCastString.objects.all()[0]
         self.assertEqual(project.languages, ['1', '2'])
 
         project.delete()
@@ -115,7 +115,7 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertEqual(project.languages, [1, 2])
 
         # Now let's fetch it again
-        project = ProjectCastInt.objects.first()
+        project = ProjectCastInt.objects.all()[0]
         self.assertEqual(project.languages, [1, 2])
 
         project.delete()
@@ -127,7 +127,7 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertEqual(project.languages, [1, 2])
 
         # Now let's fetch it again
-        project = ProjectCastInt.objects.first()
+        project = ProjectCastInt.objects.all()[0]
         self.assertEqual(project.languages, [1, 2])
 
         project.delete()
@@ -142,7 +142,7 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertEqual(project.languages, ['1', '2'])
 
         # Now let's fetch it again
-        project = ProjectCastString.objects.first()
+        project = ProjectCastString.objects.all()[0]
         self.assertEqual(project.languages, ['1', '2'])
 
         project.delete()
@@ -154,7 +154,7 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertEqual(project.languages, ['1', '2'])
 
         # Now let's fetch it again
-        project = ProjectCastString.objects.first()
+        project = ProjectCastString.objects.all()[0]
         self.assertEqual(project.languages, ['1', '2'])
 
         project.delete()
