@@ -170,7 +170,7 @@ class SeparatedValuesFieldTests(TestCase):
 
         form = ProjectCastIntForm(data={
             'name': 'Weekly',
-            'languages': [u'1', u'2'],
+            'languages': ['1', '2'],
         })
 
         self.assertTrue(form.is_valid())
@@ -191,7 +191,7 @@ class SeparatedValuesFieldTests(TestCase):
 
         form = ProjectCastStringForm(data={
             'name': 'Weekly',
-            'languages': [u'1', u'2'],
+            'languages': ['1', '2'],
         })
 
         self.assertTrue(form.is_valid())
