@@ -7,21 +7,41 @@ from django.db import models
 from django.forms.fields import MultipleChoiceField
 from django.utils import six
 from django.utils.text import capfirst
-from django.utils.six import with_metaclass
 
 
-class SeparatedValuesField(with_metaclass(models.SubfieldBase, models.CharField)):
+class Creator(object):
+    """
+    A placeholder class that provides a way to set the attribute on the model.
+    """
+    def __init__(self, field):
+        self.field = field
+
+    def __get__(self, obj, type=None):
+        if obj is None:
+            return self
+        return obj.__dict__[self.field.name]
+
+    def __set__(self, obj, value):
+        obj.__dict__[self.field.name] = self.field.to_python(value)
+
+
+class SeparatedValuesField(models.CharField):
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop('token', ',')
         self.cast = kwargs.pop('cast', six.text_type)
         super(SeparatedValuesField, self).__init__(*args, **kwargs)
+
+    def contribute_to_class(self, cls, name, **kwargs):
+        super(SeparatedValuesField, self).contribute_to_class(cls, name, **kwargs)
+
+        setattr(cls, self.name, Creator(self))
 
     def validate(self, value, model_instance):
         if not self.editable:
             # Skip validation for non-editable fields.
             return
 
-        if self._choices and value:
+        if self.choices and value:
             choices = []
 
             for option_key, option_value in self.choices:
