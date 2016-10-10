@@ -77,7 +77,7 @@ class SeparatedValuesField(models.CharField):
 
         return [self.cast(v) for v in values]
 
-    def get_db_prep_value(self, value, **kwargs):
+    def get_db_prep_value(self, value, *args, **kwargs):
         if not value:
             return ''
 
