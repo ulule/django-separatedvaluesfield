@@ -25,14 +25,14 @@ class Creator(object):
         obj.__dict__[self.field.name] = self.field.to_python(value)
 
 
-class SeparatedValuesField(models.CharField):
+class BaseSeparatedValuesField(object):
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop('token', ',')
         self.cast = kwargs.pop('cast', six.text_type)
-        super(SeparatedValuesField, self).__init__(*args, **kwargs)
+        super(BaseSeparatedValuesField, self).__init__(*args, **kwargs)
 
     def contribute_to_class(self, cls, name, **kwargs):
-        super(SeparatedValuesField, self).contribute_to_class(cls, name, **kwargs)
+        super(BaseSeparatedValuesField, self).contribute_to_class(cls, name, **kwargs)
 
         setattr(cls, self.name, Creator(self))
 
@@ -112,6 +112,14 @@ class SeparatedValuesField(models.CharField):
                     del kwargs[k]
         defaults.update(kwargs)
         return form_class(**defaults)
+
+
+class SeparatedValuesField(BaseSeparatedValuesField, models.CharField):
+    pass
+
+
+class TextSeparatedValuesField(BaseSeparatedValuesField, models.TextField):
+    pass
 
 try:
     from south.modelsinspector import add_introspection_rules

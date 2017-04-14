@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-from separatedvaluesfield.models import SeparatedValuesField
+from separatedvaluesfield.models import SeparatedValuesField, TextSeparatedValuesField
 
 
 class Project(models.Model):
@@ -25,6 +25,7 @@ class ProjectCastInt(models.Model):
             (1, 'English'),
             (2, 'French')))
 
+
 class ProjectCastString(models.Model):
     name = models.CharField(max_length=150)
     languages = SeparatedValuesField(
@@ -32,3 +33,9 @@ class ProjectCastString(models.Model):
         choices=(
             ('1', 'English'),
             ('2', 'French')))
+
+
+class ProjectText(models.Model):
+    name = models.CharField(max_length=150)
+    languages = TextSeparatedValuesField(choices=(('en', 'English'),
+                                                  ('fr', 'French')), blank=True)
