@@ -234,3 +234,12 @@ class SeparatedValuesFieldTests(TestCase):
         })
 
         self.assertTrue(form.is_valid())
+
+    def test_comma_in_string_is_not_a_new_list_item(self):
+        project1 = Project(name='blabla1', languages=['fr', 'en'])
+        project2 = Project(name='blabla2', languages=['fr, en'])
+
+        project1.save()
+        project2.save()
+
+        self.assertNotEqual(project1.languages, project2.languages)
