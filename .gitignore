@@ -10,7 +10,6 @@ temp.py
 .venv
 .env
 env
-/.idea
-test_app
+.idea
 build
 dist
