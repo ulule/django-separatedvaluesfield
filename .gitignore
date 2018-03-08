@@ -11,3 +11,6 @@ temp.py
 .env
 env
 /.idea
+test_app
+build
+dist
