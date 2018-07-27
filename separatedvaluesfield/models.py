@@ -79,7 +79,7 @@ class BaseSeparatedValuesField(object):
 
     def get_db_prep_value(self, value, *args, **kwargs):
         if not value:
-            return ''
+            return value
 
         assert(isinstance(value, list) or isinstance(value, tuple))
 
