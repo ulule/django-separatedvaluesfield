@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django import forms
+from django.core import serializers
 from django.test import TestCase
 
 from .models import (Project,
@@ -234,3 +235,10 @@ class SeparatedValuesFieldTests(TestCase):
         })
 
         self.assertTrue(form.is_valid())
+
+    def test_supports_serialization(self):
+        project = Project(name='monthly', languages=['en', 'fr'])
+        project.save()
+
+        # this should not raise any errors
+        serializers.serialize("json", (project,))

@@ -86,7 +86,7 @@ class BaseSeparatedValuesField(object):
         return self.token.join(['%s' % s for s in value])
 
     def value_to_string(self, obj):
-        value = self._get_val_from_obj(obj)
+        value = (self._get_val_from_obj(obj) if hasattr(self, "_get_val_from_obj") else self.value_from_object(obj))
         return self.get_db_prep_value(value)
 
     def formfield(self, form_class=MultipleChoiceField, **kwargs):
