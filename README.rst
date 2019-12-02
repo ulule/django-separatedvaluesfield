@@ -1,9 +1,9 @@
 django-separatedvaluesfield
 ===========================
 
-.. image:: https://secure.travis-ci.org/thoas/django-separatedvaluesfield.png?branch=master
+.. image:: https://secure.travis-ci.org/ulule/django-separatedvaluesfield.svg?branch=master
     :alt: Build Status
-    :target: http://travis-ci.org/thoas/django-separatedvaluesfield
+    :target: http://travis-ci.org/ulule/django-separatedvaluesfield
 
 Alternative to CommaSeparatedIntegerField_ built-in field that supports
 MultipleChoiceField_, custom separator and returns values as list.
@@ -17,7 +17,7 @@ Install package from PyPi_::
 
 Or download the archive from GitHub_ and proceed to a manual installation::
 
-    curl -L https://github.com/thoas/django-separatedvaluesfield/tarball/master | tar zx
+    curl -L https://github.com/ulule/django-separatedvaluesfield/tarball/master | tar zx
     cd thoas-django-separatedvaluesfield
     python setup.py install
 
@@ -110,5 +110,5 @@ Contribute
 
 .. _CommaSeparatedIntegerField: https://docs.djangoproject.com/en/dev/ref/models/fields/#commaseparatedintegerfield
 .. _PyPi: https://pypi.python.org/
-.. _GitHub: https://github.com/thoas/django-separatedvaluesfield
+.. _GitHub: https://github.com/ulule/django-separatedvaluesfield
 .. _MultipleChoiceField: https://docs.djangoproject.com/en/dev/ref/forms/fields/#multiplechoicefield
