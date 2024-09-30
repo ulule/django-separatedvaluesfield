@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.core import validators
 from django.core import exceptions
 from django.db import models
@@ -12,6 +9,7 @@ class Creator(object):
     """
     A placeholder class that provides a way to set the attribute on the model.
     """
+
     def __init__(self, field):
         self.field = field
 
@@ -26,8 +24,8 @@ class Creator(object):
 
 class BaseSeparatedValuesField(object):
     def __init__(self, *args, **kwargs):
-        self.token = kwargs.pop('token', ',')
-        self.cast = kwargs.pop('cast', str)
+        self.token = kwargs.pop("token", ",")
+        self.cast = kwargs.pop("cast", str)
         super(BaseSeparatedValuesField, self).__init__(*args, **kwargs)
 
     def contribute_to_class(self, cls, name, **kwargs):
@@ -58,13 +56,15 @@ class BaseSeparatedValuesField(object):
 
             for val in value:
                 if val and val not in choices:
-                    raise exceptions.ValidationError(self.error_messages['invalid_choice'] % val)
+                    raise exceptions.ValidationError(
+                        self.error_messages["invalid_choice"] % val
+                    )
 
         if value is None and not self.null:
-            raise exceptions.ValidationError(self.error_messages['null'])
+            raise exceptions.ValidationError(self.error_messages["null"])
 
         if not self.blank and value in validators.EMPTY_VALUES:
-            raise exceptions.ValidationError(self.error_messages['blank'])
+            raise exceptions.ValidationError(self.error_messages["blank"])
 
     def to_python(self, value):
         if not value:
@@ -80,34 +80,48 @@ class BaseSeparatedValuesField(object):
         if not value:
             return value
 
-        assert(isinstance(value, list) or isinstance(value, tuple))
+        assert isinstance(value, list) or isinstance(value, tuple)
 
-        return self.token.join(['%s' % s for s in value])
+        return self.token.join(["%s" % s for s in value])
 
     def value_to_string(self, obj):
-        value = (self._get_val_from_obj(obj) if hasattr(self, "_get_val_from_obj") else self.value_from_object(obj))
+        value = (
+            self._get_val_from_obj(obj)
+            if hasattr(self, "_get_val_from_obj")
+            else self.value_from_object(obj)
+        )
         return self.get_db_prep_value(value)
 
     def formfield(self, form_class=MultipleChoiceField, **kwargs):
-        defaults = {'required': not self.blank,
-                    'label': capfirst(self.verbose_name),
-                    'help_text': self.help_text}
+        defaults = {
+            "required": not self.blank,
+            "label": capfirst(self.verbose_name),
+            "help_text": self.help_text,
+        }
         if self.has_default():
             if callable(self.default):
-                defaults['initial'] = self.default
-                defaults['show_hidden_initial'] = True
+                defaults["initial"] = self.default
+                defaults["show_hidden_initial"] = True
             else:
-                defaults['initial'] = self.get_default()
+                defaults["initial"] = self.get_default()
 
         if self.choices:
-            include_blank = (self.blank or
-                             not (self.has_default() or 'initial' in kwargs))
-            defaults['choices'] = self.get_choices(include_blank=include_blank)
+            include_blank = self.blank or not (
+                self.has_default() or "initial" in kwargs
+            )
+            defaults["choices"] = self.get_choices(include_blank=include_blank)
 
             for k in list(kwargs):
-                if k not in ('choices', 'required',
-                             'widget', 'label', 'initial', 'help_text',
-                             'error_messages', 'show_hidden_initial'):
+                if k not in (
+                    "choices",
+                    "required",
+                    "widget",
+                    "label",
+                    "initial",
+                    "help_text",
+                    "error_messages",
+                    "show_hidden_initial",
+                ):
                     del kwargs[k]
         defaults.update(kwargs)
         return form_class(**defaults)
@@ -118,10 +132,4 @@ class SeparatedValuesField(BaseSeparatedValuesField, models.CharField):
 
 
 class TextSeparatedValuesField(BaseSeparatedValuesField, models.TextField):
-    pass
-
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^separatedvaluesfield\.models\.SeparatedValuesField"])
-except ImportError:
     pass

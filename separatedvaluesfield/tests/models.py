@@ -6,36 +6,34 @@ from separatedvaluesfield.models import SeparatedValuesField, TextSeparatedValue
 
 class Project(models.Model):
     name = models.CharField(max_length=150)
-    languages = SeparatedValuesField(max_length=150, choices=(('en', 'English'),
-                                                              ('fr', 'French')), blank=True)
+    languages = SeparatedValuesField(
+        max_length=150, choices=(("en", "English"), ("fr", "French")), blank=True
+    )
 
 
 class RequiredProject(models.Model):
     name = models.CharField(max_length=150)
-    languages = SeparatedValuesField(max_length=150, choices=(('en', 'English'),
-                                                              ('fr', 'French')))
+    languages = SeparatedValuesField(
+        max_length=150, choices=(("en", "English"), ("fr", "French"))
+    )
 
 
 class ProjectCastInt(models.Model):
     name = models.CharField(max_length=150)
     languages = SeparatedValuesField(
-        max_length=150,
-        cast=int,
-        choices=(
-            (1, 'English'),
-            (2, 'French')))
+        max_length=150, cast=int, choices=((1, "English"), (2, "French"))
+    )
 
 
 class ProjectCastString(models.Model):
     name = models.CharField(max_length=150)
     languages = SeparatedValuesField(
-        max_length=150,
-        choices=(
-            ('1', 'English'),
-            ('2', 'French')))
+        max_length=150, choices=(("1", "English"), ("2", "French"))
+    )
 
 
 class ProjectText(models.Model):
     name = models.CharField(max_length=150)
-    languages = TextSeparatedValuesField(choices=(('en', 'English'),
-                                                  ('fr', 'French')), blank=True)
+    languages = TextSeparatedValuesField(
+        choices=(("en", "English"), ("fr", "French")), blank=True
+    )

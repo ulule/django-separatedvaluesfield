@@ -5,20 +5,22 @@ from django import forms
 from django.core import serializers
 from django.test import TestCase
 
-from .models import (Project,
-                     RequiredProject,
-                     ProjectCastInt,
-                     ProjectCastString,
-                     ProjectText)
+from .models import (
+    Project,
+    RequiredProject,
+    ProjectCastInt,
+    ProjectCastString,
+    ProjectText,
+)
 
 
 class SeparatedValuesFieldTests(TestCase):
 
     def test_basics(self):
-        project = Project(name='monthly')
+        project = Project(name="monthly")
         self.assertEqual(project.languages, None)
 
-        langs = ['en', 'fr']
+        langs = ["en", "fr"]
 
         project.languages = langs
         project.save()
@@ -31,13 +33,13 @@ class SeparatedValuesFieldTests(TestCase):
                 exclude = ()
 
         form = ProjectForm()
-        self.assertFalse(form.fields['languages'].required)
+        self.assertFalse(form.fields["languages"].required)
 
-        valid_data = {'name': 'Weekly', 'languages': ['']}
+        valid_data = {"name": "Weekly", "languages": [""]}
         form = ProjectForm(data=valid_data)
         self.assertTrue(form.is_valid())
 
-        valid_data = {'name': 'Daily', 'languages': ['en', 'fr']}
+        valid_data = {"name": "Daily", "languages": ["en", "fr"]}
         form = ProjectForm(data=valid_data)
         self.assertTrue(form.is_valid())
 
@@ -46,10 +48,10 @@ class SeparatedValuesFieldTests(TestCase):
         self.assertEqual(instance.languages, langs)
 
     def test_basics_text(self):
-        project = ProjectText(name='monthly')
+        project = ProjectText(name="monthly")
         self.assertEqual(project.languages, None)
 
-        langs = ['en', 'fr']
+        langs = ["en", "fr"]
 
         project.languages = langs
         project.save()
@@ -62,13 +64,13 @@ class SeparatedValuesFieldTests(TestCase):
                 exclude = ()
 
         form = ProjectForm()
-        self.assertFalse(form.fields['languages'].required)
+        self.assertFalse(form.fields["languages"].required)
 
-        valid_data = {'name': 'Weekly', 'languages': ['']}
+        valid_data = {"name": "Weekly", "languages": [""]}
         form = ProjectForm(data=valid_data)
         self.assertTrue(form.is_valid())
 
-        valid_data = {'name': 'Daily', 'languages': ['en', 'fr']}
+        valid_data = {"name": "Daily", "languages": ["en", "fr"]}
         form = ProjectForm(data=valid_data)
         self.assertTrue(form.is_valid())
 
@@ -87,20 +89,19 @@ class SeparatedValuesFieldTests(TestCase):
                 model = RequiredProject
                 exclude = ()
 
-        form = ProjectForm(data={
-            'name': 'Weekly',
-            'languages': ['fake']
-        })
+        form = ProjectForm(data={"name": "Weekly", "languages": ["fake"]})
 
         self.assertFalse(form.is_valid())
-        self.assertIn('languages', form.errors)
+        self.assertIn("languages", form.errors)
 
-        required_form = RequiredProjectForm(data={
-            'name': 'Weekly',
-        })
+        required_form = RequiredProjectForm(
+            data={
+                "name": "Weekly",
+            }
+        )
 
         self.assertFalse(required_form.is_valid())
-        self.assertIn('languages', required_form.errors)
+        self.assertIn("languages", required_form.errors)
 
     def test_cast_model(self):
 
@@ -108,7 +109,7 @@ class SeparatedValuesFieldTests(TestCase):
         # A single tring
         #
 
-        project = ProjectCastInt(name='project')
+        project = ProjectCastInt(name="project")
         self.assertEqual(project.languages, None)
 
         langs = "1,2"
@@ -122,17 +123,17 @@ class SeparatedValuesFieldTests(TestCase):
 
         project.delete()
 
-        project = ProjectCastString(name='project')
+        project = ProjectCastString(name="project")
         self.assertEqual(project.languages, None)
 
         langs = "1,2"
         project.languages = langs
         project.save()
-        self.assertEqual(project.languages, ['1', '2'])
+        self.assertEqual(project.languages, ["1", "2"])
 
         # Now let's fetch it again
         project = ProjectCastString.objects.all()[0]
-        self.assertEqual(project.languages, ['1', '2'])
+        self.assertEqual(project.languages, ["1", "2"])
 
         project.delete()
 
@@ -140,10 +141,10 @@ class SeparatedValuesFieldTests(TestCase):
         # List of Integers
         #
 
-        project = ProjectCastInt(name='project')
+        project = ProjectCastInt(name="project")
         self.assertEqual(project.languages, None)
 
-        project.languages = ['1', '2']
+        project.languages = ["1", "2"]
         project.save()
         self.assertEqual(project.languages, [1, 2])
 
@@ -153,7 +154,7 @@ class SeparatedValuesFieldTests(TestCase):
 
         project.delete()
 
-        project = ProjectCastInt(name='project')
+        project = ProjectCastInt(name="project")
         self.assertEqual(project.languages, None)
         project.languages = [1, 2]
         project.save()
@@ -167,28 +168,28 @@ class SeparatedValuesFieldTests(TestCase):
 
         # List of strings
 
-        project = ProjectCastString(name='project')
+        project = ProjectCastString(name="project")
         self.assertEqual(project.languages, None)
 
-        project.languages = ['1', '2']
+        project.languages = ["1", "2"]
         project.save()
-        self.assertEqual(project.languages, ['1', '2'])
+        self.assertEqual(project.languages, ["1", "2"])
 
         # Now let's fetch it again
         project = ProjectCastString.objects.all()[0]
-        self.assertEqual(project.languages, ['1', '2'])
+        self.assertEqual(project.languages, ["1", "2"])
 
         project.delete()
 
-        project = ProjectCastString(name='project')
+        project = ProjectCastString(name="project")
         self.assertEqual(project.languages, None)
         project.languages = [1, 2]
         project.save()
-        self.assertEqual(project.languages, ['1', '2'])
+        self.assertEqual(project.languages, ["1", "2"])
 
         # Now let's fetch it again
         project = ProjectCastString.objects.all()[0]
-        self.assertEqual(project.languages, ['1', '2'])
+        self.assertEqual(project.languages, ["1", "2"])
 
         project.delete()
 
@@ -201,17 +202,21 @@ class SeparatedValuesFieldTests(TestCase):
                 model = ProjectCastInt
                 exclude = ()
 
-        form = ProjectCastIntForm(data={
-            'name': 'Weekly',
-            'languages': ['1', '2'],
-        })
+        form = ProjectCastIntForm(
+            data={
+                "name": "Weekly",
+                "languages": ["1", "2"],
+            }
+        )
 
         self.assertTrue(form.is_valid())
 
-        form = ProjectCastIntForm(data={
-            'name': 'Weekly',
-            'languages': [1, 2],
-        })
+        form = ProjectCastIntForm(
+            data={
+                "name": "Weekly",
+                "languages": [1, 2],
+            }
+        )
 
         self.assertTrue(form.is_valid())
 
@@ -222,22 +227,26 @@ class SeparatedValuesFieldTests(TestCase):
                 model = ProjectCastString
                 exclude = ()
 
-        form = ProjectCastStringForm(data={
-            'name': 'Weekly',
-            'languages': ['1', '2'],
-        })
+        form = ProjectCastStringForm(
+            data={
+                "name": "Weekly",
+                "languages": ["1", "2"],
+            }
+        )
 
         self.assertTrue(form.is_valid())
 
-        form = ProjectCastStringForm(data={
-            'name': 'Weekly',
-            'languages': ['1', '2'],
-        })
+        form = ProjectCastStringForm(
+            data={
+                "name": "Weekly",
+                "languages": ["1", "2"],
+            }
+        )
 
         self.assertTrue(form.is_valid())
 
     def test_supports_serialization(self):
-        project = Project(name='monthly', languages=['en', 'fr'])
+        project = Project(name="monthly", languages=["en", "fr"])
         project.save()
 
         # this should not raise any errors
